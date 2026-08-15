@@ -179,7 +179,7 @@
 <div class="crt">
 
   <header>
-    <div class="logo">NEW_TAB<span class="cursor">_</span></div>
+    <div class="logo">ITS A WILD: NEW TAB!!<span class="cursor">_</span></div>
     <div class="clock">
       <div id="clockTime">--:--:--</div>
       <div id="clockDate">----</div>
@@ -202,9 +202,9 @@
     <div class="panel">
       <div class="panel-title">LINKS.SYS <span class="dim">// quick access</span></div>
       <ul class="link-list">
-        <li><span class="num">01_</span><a href="https://www.google.com" target="_blank">actually useful search. it knows everything...</a></li>
-        <li><span class="num">02_</span><a href="https://mail.google.com" target="_blank">answer the emails your teachers sent you</a></li>
-        <li><span class="num">03_</span><a href="https://nuovo.magister.net" target="_blank">check your grades. hope you didn't dance through test week</a></li>
+        <li><span class="num">01_</span><a href="https://www.google.com" target="_blank">actually useful search. it kinda knows everything...</a></li>
+        <li><span class="num">02_</span><a href="https://mail.google.com" target="_blank">don't answer the emails your teachers sent you</a></li>
+        <li><span class="num">03_</span><a href="https://nuovo.magister.net" target="_blank">go and see where your 5th math class of the week is?!?!?!?!? WHYYYYY 4 1/2 hours of MATHSSS *Censored*</a></li>
         <li><span class="num">04_</span><a href="https://stardance.space/liftoff" target="_blank">go dancing on the stars instead. shoot high, maybe you hit the ISS</a></li>
       </ul>
     </div>
@@ -212,7 +212,7 @@
 
   <footer>
     <span id="uptime">SESSION 00:00</span>
-    <span>local-only · judging you since install</span>
+    <span>Idonnot store your data.</span>
   </footer>
 
 </div>
@@ -240,7 +240,7 @@
     if(tasks.length === 0){
       var empty = document.createElement('div');
       empty.className = 'empty';
-      empty.textContent = 'no tasks logged. suspicious.';
+      empty.textContent = 'No tasks! Ur free for today';
       list.appendChild(empty);
     }
     tasks.forEach(function(t){
@@ -275,7 +275,7 @@
     if(total === 0){
       summary.textContent = 'add something. anything. do it now.';
     } else {
-      summary.textContent = done + ' / ' + total + ' done — ' + (total - done) + ' still standing between you and being a smart boy.';
+      summary.textContent = done + ' / ' + total + ' done — ' + (total - done) + ' ';
     }
   }
 
@@ -318,8 +318,8 @@
 
   var lines = [];
   if(!lastVisitRaw){
-    lines.push('Well, well, well. First time here.');
-    lines.push('You have decided to stop procrastinating? Bold claim. We will see.');
+    lines.push('');
+    lines.push('');
   } else {
     var diffMs = now - parseInt(lastVisitRaw, 10);
     var mins = Math.floor(diffMs / 60000);
@@ -330,18 +330,18 @@
     else if(hrs >= 1) away = hrs + ' hour' + (hrs===1?'':'s');
     else away = Math.max(mins,1) + ' minute' + (mins===1?'':'s');
 
-    lines.push('Look who is back. It has been ' + away + ' since your last visit.');
+    lines.push('Time for a NEW TAAAAAB');
 
     if(totalTasks === 0){
-      lines.push('No tasks on record either. Curious, for someone who claims to be busy.');
+      lines.push('No tasks yes.');
     } else if(incomplete === 0){
-      lines.push('All tasks cleared, though. Fine. You may be a smart boy after all.');
+      lines.push('Are you done?');
     } else if(incomplete <= 2){
-      lines.push(incomplete + ' task' + (incomplete===1?'':'s') + ' still open. Nearly there. Do not ruin it now.');
+      lines.push(incomplete + ' task' + (incomplete===1?'':'s') + ' still open.');
     } else if(days >= 1){
-      lines.push(incomplete + ' tasks still sitting untouched after ' + away + '. This is not a great look.');
+      lines.push(STILL NOT DONE?);
     } else {
-      lines.push(incomplete + ' task' + (incomplete===1?'':'s') + ' waiting. In that case, here is what still needs doing:');
+      lines.push(Get TO WORK!!!.);
     }
   }
 
