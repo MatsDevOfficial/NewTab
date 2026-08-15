@@ -65,32 +65,50 @@
   .cursor{display:inline-block; animation:blink 1s step-end infinite;}
   @keyframes blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
 
-  .clock{
-    text-align:right;
-    color:var(--phosphor-dim);
-    font-size:18px;
-    line-height:1.3;
+  .boot-row{
+    display:flex;
+    align-items:stretch;
+    gap:22px;
+    margin-bottom:36px;
   }
-  .clock b{color:var(--phosphor); font-weight:400;}
-
   .boot{
     border-left:2px solid var(--phosphor-dim);
     padding-left:16px;
-    margin-bottom:36px;
     min-height:110px;
     font-size:21px;
     line-height:1.5;
     white-space:pre-wrap;
+    flex:1;
   }
   .boot .warn{color:var(--amber);}
   .boot .crit{color:var(--red);}
+
+  .clock{
+    text-align:right;
+    color:var(--phosphor-dim);
+    flex-shrink:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  #clockTime{
+    font-family:'Press Start 2P', monospace;
+    font-size:34px;
+    color:var(--phosphor);
+    text-shadow:0 0 6px var(--phosphor), 0 0 14px rgba(124,255,158,0.35);
+    line-height:1.2;
+  }
+  #clockDate{
+    font-size:20px;
+    margin-top:6px;
+  }
 
   .grid{
     display:grid;
     grid-template-columns:1.1fr 1fr;
     gap:24px;
   }
-  @media(max-width:680px){ .grid{grid-template-columns:1fr;} }
+  @media(max-width:680px){ .grid{grid-template-columns:1fr;} .boot-row{flex-direction:column; gap:12px;} .clock{align-items:flex-start; text-align:left;} }
 
   .panel{
     border:1px solid var(--border);
@@ -180,13 +198,15 @@
 
   <header>
     <div class="logo">ITS A WILD: NEW TAB!!<span class="cursor">_</span></div>
+  </header>
+
+  <div class="boot-row">
+    <div class="boot" id="bootText"></div>
     <div class="clock">
       <div id="clockTime">--:--:--</div>
       <div id="clockDate">----</div>
     </div>
-  </header>
-
-  <div class="boot" id="bootText"></div>
+  </div>
 
   <main class="grid">
     <div class="panel">
@@ -212,7 +232,7 @@
 
   <footer>
     <span id="uptime">SESSION 00:00</span>
-    <span>Idonnot store your data.</span>
+    <span>I donnot store your data.</span>
   </footer>
 
 </div>
@@ -339,9 +359,9 @@
     } else if(incomplete <= 2){
       lines.push(incomplete + ' task' + (incomplete===1?'':'s') + ' still open.');
     } else if(days >= 1){
-      lines.push(STILL NOT DONE?);
+      lines.push('STILL NOT DONE?');
     } else {
-      lines.push(Get TO WORK!!!.);
+      lines.push('Get TO WORK!!!.');
     }
   }
 
