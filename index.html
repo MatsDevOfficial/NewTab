@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>New Tab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080b09;
+    --bg-panel:#0e1410;
+    --border:#1f3327;
+    --phosphor:#7CFF9E;
+    --phosphor-dim:#3f7a52;
+    --amber:#ffb454;
+    --red:#ff5f56;
+    --text-dim:#4a6b56;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    height:100%;
+    background:var(--bg);
+    color:var(--phosphor);
+    font-family:'VT323', monospace;
+    font-size:20px;
+    overflow-x:hidden;
+  }
+  .crt{
+    min-height:100vh;
+    position:relative;
+    padding:48px clamp(20px,6vw,80px);
+    max-width:960px;
+    margin:0 auto;
+  }
+  .scanlines{
+    position:fixed; inset:0; pointer-events:none; z-index:5;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.18) 3px
+    );
+    mix-blend-mode:multiply;
+  }
+  .vignette{
+    position:fixed; inset:0; pointer-events:none; z-index:4;
+    box-shadow: inset 0 0 180px rgba(0,0,0,0.85);
+  }
+  @keyframes flicker{
+    0%,100%{opacity:1;}
+    92%{opacity:1;}
+    93%{opacity:0.94;}
+    94%{opacity:1;}
+  }
+  .crt{animation:flicker 6s infinite;}
+
+  header{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:28px;}
+  .logo{
+    font-family:'Press Start 2P', monospace;
+    font-size:22px;
+    letter-spacing:1px;
+    text-shadow:0 0 6px var(--phosphor), 0 0 14px rgba(124,255,158,0.4);
+  }
+  .cursor{display:inline-block; animation:blink 1s step-end infinite;}
+  @keyframes blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+
+  .clock{
+    text-align:right;
+    color:var(--phosphor-dim);
+    font-size:18px;
+    line-height:1.3;
+  }
+  .clock b{color:var(--phosphor); font-weight:400;}
+
+  .boot{
+    border-left:2px solid var(--phosphor-dim);
+    padding-left:16px;
+    margin-bottom:36px;
+    min-height:110px;
+    font-size:21px;
+    line-height:1.5;
+    white-space:pre-wrap;
+  }
+  .boot .warn{color:var(--amber);}
+  .boot .crit{color:var(--red);}
+
+  .grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:24px;
+  }
+  @media(max-width:680px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{
+    border:1px solid var(--border);
+    background:var(--bg-panel);
+    padding:16px 18px 18px;
+  }
+  .panel-title{
+    font-family:'Press Start 2P', monospace;
+    font-size:11px;
+    color:var(--phosphor);
+    margin-bottom:14px;
+    letter-spacing:0.5px;
+  }
+  .panel-title .dim{color:var(--text-dim); font-family:'VT323',monospace; font-size:15px; margin-left:4px;}
+
+  .prompt-row{display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+  .prompt{color:var(--amber);}
+  input#taskInput{
+    flex:1;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--border);
+    color:var(--phosphor);
+    font-family:'VT323',monospace;
+    font-size:20px;
+    padding:4px 2px;
+    outline:none;
+  }
+  input#taskInput:focus{border-bottom-color:var(--phosphor);}
+  input#taskInput::placeholder{color:var(--text-dim);}
+
+  ul#taskList{list-style:none; margin:0; padding:0; max-height:260px; overflow-y:auto;}
+  ul#taskList li{
+    display:flex; align-items:center; gap:10px;
+    padding:6px 0;
+    border-bottom:1px dashed var(--border);
+    cursor:pointer;
+  }
+  ul#taskList li:last-child{border-bottom:none;}
+  ul#taskList li .box{color:var(--phosphor); min-width:26px;}
+  ul#taskList li.done .box{color:var(--phosphor-dim);}
+  ul#taskList li.done .label{color:var(--phosphor-dim); text-decoration:line-through;}
+  ul#taskList li .label{flex:1;}
+  ul#taskList li .del{
+    color:var(--text-dim); opacity:0; transition:opacity .1s;
+    font-size:17px;
+  }
+  ul#taskList li:hover .del{opacity:1;}
+  ul#taskList li .del:hover{color:var(--red);}
+  .empty{color:var(--text-dim); font-style:italic;}
+
+  .task-summary{
+    margin-top:12px; padding-top:10px;
+    border-top:1px solid var(--border);
+    color:var(--text-dim); font-size:16px;
+  }
+
+  ul.link-list{list-style:none; margin:0; padding:0;}
+  ul.link-list li{padding:7px 0; border-bottom:1px dashed var(--border);}
+  ul.link-list li:last-child{border-bottom:none;}
+  ul.link-list a{
+    color:var(--phosphor);
+    text-decoration:none;
+  }
+  ul.link-list a:hover{color:var(--amber); text-decoration:underline;}
+  ul.link-list .num{color:var(--phosphor-dim); margin-right:6px;}
+
+  footer{
+    margin-top:32px;
+    color:var(--text-dim);
+    font-size:15px;
+    display:flex; justify-content:space-between;
+    border-top:1px solid var(--border);
+    padding-top:10px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .crt{animation:none;}
+    .cursor{animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="crt">
+
+  <header>
+    <div class="logo">NEW_TAB<span class="cursor">_</span></div>
+    <div class="clock">
+      <div id="clockTime">--:--:--</div>
+      <div id="clockDate">----</div>
+    </div>
+  </header>
+
+  <div class="boot" id="bootText"></div>
+
+  <main class="grid">
+    <div class="panel">
+      <div class="panel-title">TASKS.SYS <span class="dim">// press enter to add</span></div>
+      <div class="prompt-row">
+        <span class="prompt">&gt;</span>
+        <input id="taskInput" placeholder="type a task and hit enter..." autocomplete="off">
+      </div>
+      <ul id="taskList"></ul>
+      <div class="task-summary" id="taskSummary"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">LINKS.SYS <span class="dim">// quick access</span></div>
+      <ul class="link-list">
+        <li><span class="num">01_</span><a href="https://www.google.com" target="_blank">actually useful search. it knows everything...</a></li>
+        <li><span class="num">02_</span><a href="https://mail.google.com" target="_blank">answer the emails your teachers sent you</a></li>
+        <li><span class="num">03_</span><a href="https://classroom.google.com" target="_blank">check your grades. hope you didn't dance through test week</a></li>
+        <li><span class="num">04_</span><a href="https://spotthestation.nasa.gov" target="_blank">go dancing on the stars instead. shoot high, maybe you hit the ISS</a></li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <span id="uptime">SESSION 00:00</span>
+    <span>local-only · judging you since install</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'ntab_tasks';
+  var VISIT_KEY = 'ntab_lastVisit';
+
+  function loadTasks(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveTasks(tasks){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }catch(e){}
+  }
+
+  var tasks = loadTasks();
+
+  function renderTasks(){
+    var list = document.getElementById('taskList');
+    list.innerHTML = '';
+    if(tasks.length === 0){
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'no tasks logged. suspicious.';
+      list.appendChild(empty);
+    }
+    tasks.forEach(function(t){
+      var li = document.createElement('li');
+      if(t.done) li.className = 'done';
+      var box = document.createElement('span');
+      box.className = 'box';
+      box.textContent = t.done ? '[x]' : '[ ]';
+      var label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = t.text;
+      var del = document.createElement('span');
+      del.className = 'del';
+      del.textContent = 'x';
+      li.appendChild(box);
+      li.appendChild(label);
+      li.appendChild(del);
+      li.addEventListener('click', function(e){
+        if(e.target === del){
+          tasks = tasks.filter(function(x){ return x.id !== t.id; });
+        } else {
+          t.done = !t.done;
+        }
+        saveTasks(tasks);
+        renderTasks();
+      });
+      list.appendChild(li);
+    });
+    var total = tasks.length;
+    var done = tasks.filter(function(t){ return t.done; }).length;
+    var summary = document.getElementById('taskSummary');
+    if(total === 0){
+      summary.textContent = 'add something. anything. do it now.';
+    } else {
+      summary.textContent = done + ' / ' + total + ' done — ' + (total - done) + ' still standing between you and being a smart boy.';
+    }
+  }
+
+  document.getElementById('taskInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      var val = e.target.value.trim();
+      if(val.length === 0) return;
+      tasks.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2), text: val, done: false });
+      saveTasks(tasks);
+      e.target.value = '';
+      renderTasks();
+    }
+  });
+
+  renderTasks();
+
+  function pad(n){ return n < 10 ? '0'+n : ''+n; }
+  function updateClock(){
+    var d = new Date();
+    document.getElementById('clockTime').innerHTML = pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    document.getElementById('clockDate').innerHTML = days[d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  var sessionStart = Date.now();
+  setInterval(function(){
+    var secs = Math.floor((Date.now() - sessionStart)/1000);
+    document.getElementById('uptime').textContent = 'SESSION ' + pad(Math.floor(secs/60)) + ':' + pad(secs%60);
+  }, 1000);
+
+  var lastVisitRaw = null;
+  try{ lastVisitRaw = localStorage.getItem(VISIT_KEY); }catch(e){}
+  var now = Date.now();
+  try{ localStorage.setItem(VISIT_KEY, String(now)); }catch(e){}
+
+  var incomplete = tasks.filter(function(t){ return !t.done; }).length;
+  var totalTasks = tasks.length;
+
+  var lines = [];
+  if(!lastVisitRaw){
+    lines.push('Well, well, well. First time here.');
+    lines.push('You have decided to stop procrastinating? Bold claim. We will see.');
+  } else {
+    var diffMs = now - parseInt(lastVisitRaw, 10);
+    var mins = Math.floor(diffMs / 60000);
+    var hrs = Math.floor(mins / 60);
+    var days = Math.floor(hrs / 24);
+    var away;
+    if(days >= 1) away = days + ' day' + (days===1?'':'s');
+    else if(hrs >= 1) away = hrs + ' hour' + (hrs===1?'':'s');
+    else away = Math.max(mins,1) + ' minute' + (mins===1?'':'s');
+
+    lines.push('Look who is back. It has been ' + away + ' since your last visit.');
+
+    if(totalTasks === 0){
+      lines.push('No tasks on record either. Curious, for someone who claims to be busy.');
+    } else if(incomplete === 0){
+      lines.push('All tasks cleared, though. Fine. You may be a smart boy after all.');
+    } else if(incomplete <= 2){
+      lines.push(incomplete + ' task' + (incomplete===1?'':'s') + ' still open. Nearly there. Do not ruin it now.');
+    } else if(days >= 1){
+      lines.push(incomplete + ' tasks still sitting untouched after ' + away + '. This is not a great look.');
+    } else {
+      lines.push(incomplete + ' task' + (incomplete===1?'':'s') + ' waiting. In that case, here is what still needs doing:');
+    }
+  }
+
+  var bootEl = document.getElementById('bootText');
+  var fullText = lines.join('\n');
+  var i = 0;
+  function typeChar(){
+    if(i <= fullText.length){
+      bootEl.textContent = fullText.slice(0, i);
+      i++;
+      setTimeout(typeChar, 14);
+    } else {
+      bootEl.textContent = fullText;
+    }
+  }
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){
+    bootEl.textContent = fullText;
+  } else {
+    typeChar();
+  }
+})();
+</script>
+</body>
+</html>
