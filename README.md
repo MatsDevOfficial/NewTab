@@ -1,15 +1,16 @@
 # NewTab
 A HTML new tab page with built in shortlinks and todolist
-<img width="900" height="576" alt="Scherm­afbeelding 2026-08-15 om 17 05 46" src="https://github.com/user-attachments/assets/0908933f-df67-4bda-8655-3cba7613798a" />
+<img width="1328" height="681" alt="image" src="https://github.com/user-attachments/assets/a507f61f-78e9-4042-85cc-eed25f1c024f" />
+
 Test it: https://matsdevofficial.github.io/NewTab/
 
 Quickstart: 
 Click in the link.
 
 features:
-- Clock and date
-- todolist via cache
 - links to mail, stardance and magister
+- Clock
+- Rocket animation
 
 
 How it works:
