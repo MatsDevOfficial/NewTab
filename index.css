@@ -1,0 +1,164 @@
+:root {
+    --color-dark: #141413;
+    --color-light: #faf9f5;
+    --color-mid-gray: #b0aea5;
+    --color-light-gray: #e8e6dc;
+    --color-orange: #d97757;
+    --color-blue: #6a9bcc;
+    --color-green: #788c5d;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    background-color: var(--color-dark);
+    color: var(--color-light);
+    font-family: "Lora", Georgia, serif;
+    min-height: 100vh;
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    min-height: 100vh;
+    padding: 40px;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 6;
+    text-align: center;
+}
+
+.div1 h1 {
+    font-family: "Poppins", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 2.75rem;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--color-orange), var(--color-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.div2 {
+    grid-area: 2 / 1 / 6 / 3;
+    font-family: "Lora", Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-light-gray);
+}
+
+.div2 p {
+    color: var(--color-mid-gray);
+}
+
+.div2 ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.div2 li {
+    border-left: 3px solid var(--color-orange);
+    padding: 10px 16px;
+    background-color: rgba(232, 230, 220, 0.05);
+    border-radius: 0 6px 6px 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.div2 li:nth-child(2) {
+    border-left-color: var(--color-blue);
+}
+
+.div2 li:nth-child(3) {
+    border-left-color: var(--color-green);
+}
+
+.div2 li:nth-child(4) {
+    border-left-color: var(--color-orange);
+}
+
+.div2 li:hover {
+    background-color: rgba(232, 230, 220, 0.1);
+    transform: translateX(4px);
+}
+
+.div2 a {
+    color: var(--color-light);
+    text-decoration: none;
+    font-family: "Poppins", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 0.95rem;
+}
+
+.div2 a:hover {
+    color: var(--color-orange);
+}
+
+.div3 {
+    grid-area: 2 / 3 / 6 / 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.div4 {
+    grid-area: 2 / 5 / 6 / 6;
+}
+
+/* Clock */
+#clock {
+    font-family: "Poppins", Arial, sans-serif;
+    margin-top: 4px;
+}
+
+#clock-time {
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--color-light);
+    letter-spacing: 0.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+#clock-date {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-mid-gray);
+    margin-top: 4px;
+}
+
+/* Rocket Animation Styles */
+#page-wrapper {
+    transition: transform 1.5s cubic-bezier(0.5, 0, 0.2, 1);
+    min-height: 100vh;
+}
+
+#page-wrapper.fly-up {
+    transform: translateY(-120vh);
+}
+
+#rocket {
+    position: fixed;
+    bottom: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 6rem;
+    z-index: 9999;
+    transition: bottom 1.5s cubic-bezier(0.5, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+#rocket.launch {
+    bottom: 120vh;
+}
